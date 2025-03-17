@@ -1,12 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   MessageCircle, 
   Heart, 
   Share, 
   MoreHorizontal, 
-  Bookmark
+  Bookmark,
+  Play
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -26,6 +27,10 @@ interface FeedPostProps {
     avatar: string;
     content: string;
     image?: string;
+    video?: {
+      url: string;
+      type: 'reel' | 'fullVideo';
+    };
     timestamp: string;
     likes: number;
     comments: number;
@@ -39,6 +44,8 @@ export const FeedPost = ({ post }: FeedPostProps) => {
   const [isLiked, setIsLiked] = useState(post.liked || false);
   const [likeCount, setLikeCount] = useState(post.likes);
   const [isSaved, setIsSaved] = useState(post.saved || false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   
   const handleLike = () => {
     if (isLiked) {
@@ -52,6 +59,17 @@ export const FeedPost = ({ post }: FeedPostProps) => {
   
   const handleSave = () => {
     setIsSaved(!isSaved);
+  };
+  
+  const toggleVideoPlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
   };
   
   return (
@@ -95,6 +113,34 @@ export const FeedPost = ({ post }: FeedPostProps) => {
             className="w-full h-auto object-cover hover-scale max-h-[500px]" 
             loading="lazy"
           />
+        </div>
+      )}
+      
+      {post.video && (
+        <div className="mb-3 overflow-hidden rounded-lg relative">
+          <video 
+            ref={videoRef}
+            src={post.video.url}
+            className="w-full h-auto object-cover hover-scale max-h-[500px]"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            controls
+          />
+          {!isPlaying && (
+            <div 
+              className="absolute inset-0 flex items-center justify-center bg-black/30 cursor-pointer"
+              onClick={toggleVideoPlay}
+            >
+              <div className="h-16 w-16 rounded-full bg-black/50 flex items-center justify-center">
+                <Play className="h-8 w-8 text-white" />
+              </div>
+            </div>
+          )}
+          {post.video.type === 'reel' && (
+            <div className="absolute top-2 left-2 bg-accent/70 text-white text-xs px-2 py-1 rounded-full">
+              Reel
+            </div>
+          )}
         </div>
       )}
       
