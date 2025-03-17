@@ -28,9 +28,11 @@ const posts = [
     image: 'https://source.unsplash.com/random/1200x800/?cafe',
     timestamp: '4 hours ago',
     likes: 287,
+    dislikes: 14,
     comments: 32,
     shares: 5,
     liked: false,
+    disliked: false,
   },
   {
     id: '2',
@@ -41,9 +43,11 @@ const posts = [
     image: 'https://source.unsplash.com/random/1200x800/?camera',
     timestamp: '1 day ago',
     likes: 543,
+    dislikes: 7,
     comments: 76,
     shares: 12,
     liked: true,
+    disliked: false,
   },
   {
     id: '3',
@@ -54,9 +58,11 @@ const posts = [
     image: 'https://source.unsplash.com/random/1200x800/?sunset',
     timestamp: '3 days ago',
     likes: 824,
+    dislikes: 5,
     comments: 92,
     shares: 45,
     liked: false,
+    disliked: false,
   },
 ];
 

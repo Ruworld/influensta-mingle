@@ -3,7 +3,8 @@ import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   MessageCircle, 
-  Heart, 
+  ThumbsUp, 
+  ThumbsDown, 
   Share, 
   MoreHorizontal, 
   Bookmark,
@@ -18,6 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { CommentSection } from '@/components/feed/CommentSection';
 
 interface FeedPostProps {
   post: {
@@ -33,18 +35,23 @@ interface FeedPostProps {
     };
     timestamp: string;
     likes: number;
+    dislikes?: number;
     comments: number;
     shares: number;
     liked?: boolean;
+    disliked?: boolean;
     saved?: boolean;
   };
 }
 
 export const FeedPost = ({ post }: FeedPostProps) => {
   const [isLiked, setIsLiked] = useState(post.liked || false);
+  const [isDisliked, setIsDisliked] = useState(post.disliked || false);
   const [likeCount, setLikeCount] = useState(post.likes);
+  const [dislikeCount, setDislikeCount] = useState(post.dislikes || 0);
   const [isSaved, setIsSaved] = useState(post.saved || false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   
   const handleLike = () => {
@@ -54,6 +61,28 @@ export const FeedPost = ({ post }: FeedPostProps) => {
     } else {
       setLikeCount(likeCount + 1);
       setIsLiked(true);
+      
+      // If the post was disliked, remove the dislike
+      if (isDisliked) {
+        setDislikeCount(dislikeCount - 1);
+        setIsDisliked(false);
+      }
+    }
+  };
+  
+  const handleDislike = () => {
+    if (isDisliked) {
+      setDislikeCount(dislikeCount - 1);
+      setIsDisliked(false);
+    } else {
+      setDislikeCount(dislikeCount + 1);
+      setIsDisliked(true);
+      
+      // If the post was liked, remove the like
+      if (isLiked) {
+        setLikeCount(likeCount - 1);
+        setIsLiked(false);
+      }
     }
   };
   
@@ -70,6 +99,10 @@ export const FeedPost = ({ post }: FeedPostProps) => {
       }
       setIsPlaying(!isPlaying);
     }
+  };
+  
+  const toggleComments = () => {
+    setShowComments(!showComments);
   };
   
   return (
@@ -152,7 +185,7 @@ export const FeedPost = ({ post }: FeedPostProps) => {
             className="flex items-center gap-1.5 px-2 h-8 text-muted-foreground hover:text-foreground"
             onClick={handleLike}
           >
-            <Heart
+            <ThumbsUp
               className={cn(
                 "h-4 w-4 transition-all",
                 isLiked ? "fill-accent text-accent" : ""
@@ -165,6 +198,22 @@ export const FeedPost = ({ post }: FeedPostProps) => {
             variant="ghost"
             size="sm"
             className="flex items-center gap-1.5 px-2 h-8 text-muted-foreground hover:text-foreground"
+            onClick={handleDislike}
+          >
+            <ThumbsDown
+              className={cn(
+                "h-4 w-4 transition-all",
+                isDisliked ? "fill-destructive text-destructive" : ""
+              )}
+            />
+            <span>{dislikeCount}</span>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-1.5 px-2 h-8 text-muted-foreground hover:text-foreground"
+            onClick={toggleComments}
           >
             <MessageCircle className="h-4 w-4" />
             <span>{post.comments}</span>
@@ -198,6 +247,12 @@ export const FeedPost = ({ post }: FeedPostProps) => {
       <div className="mt-3 text-xs text-muted-foreground">
         {post.timestamp}
       </div>
+      
+      {showComments && (
+        <div className="mt-4 pt-3 border-t border-border">
+          <CommentSection postId={post.id} />
+        </div>
+      )}
     </div>
   );
 };

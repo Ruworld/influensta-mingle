@@ -15,9 +15,11 @@ const posts = [
     image: 'https://source.unsplash.com/random/1200x800/?photoshoot',
     timestamp: '2 hours ago',
     likes: 423,
+    dislikes: 15,
     comments: 47,
     shares: 12,
     liked: false,
+    disliked: false,
   },
   {
     id: '2',
@@ -28,9 +30,11 @@ const posts = [
     image: 'https://source.unsplash.com/random/1200x800/?cafe',
     timestamp: '4 hours ago',
     likes: 287,
+    dislikes: 8,
     comments: 32,
     shares: 5,
     liked: true,
+    disliked: false,
   },
   {
     id: '3',
@@ -40,9 +44,11 @@ const posts = [
     content: 'Just launched my new website! Check it out and let me know what you think. Link in bio.',
     timestamp: '6 hours ago',
     likes: 567,
+    dislikes: 21,
     comments: 84,
     shares: 23,
     liked: false,
+    disliked: false,
   },
   {
     id: '4',
@@ -52,9 +58,11 @@ const posts = [
     content: 'The key to staying relevant in this industry is constant innovation. Always be learning, always be growing.',
     timestamp: 'Yesterday',
     likes: 832,
+    dislikes: 12,
     comments: 65,
     shares: 41,
     liked: false,
+    disliked: false,
   },
 ];
 
