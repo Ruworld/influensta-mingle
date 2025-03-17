@@ -62,7 +62,7 @@ const messages = {
     },
     {
       id: '2',
-      content: 'Hi Sarah! I was thinking maybe next week? I'm pretty busy with client work this week.',
+      content: "Hi Sarah! I was thinking maybe next week? I'm pretty busy with client work this week.",
       timestamp: '10:35 AM',
       isOwn: true,
       status: 'read' as const,
