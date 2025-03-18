@@ -11,6 +11,10 @@ import Explore from "./pages/Explore";
 import NotFound from "./pages/NotFound";
 import Reels from "./pages/Reels";
 import Shorts from "./pages/Shorts";
+import Settings from "./pages/Settings";
+import SignIn from "./pages/auth/SignIn";
+import SignUp from "./pages/auth/SignUp";
+import Notifications from "./pages/Notifications";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +31,10 @@ const App = () => (
           <Route path="/explore" element={<Explore />} />
           <Route path="/reels" element={<Reels />} />
           <Route path="/shorts" element={<Shorts />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

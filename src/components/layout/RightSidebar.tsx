@@ -67,13 +67,13 @@ export const RightSidebar = () => {
         </div>
 
         {/* Premium section */}
-        <div className="bg-gradient-to-br from-accent/10 to-secondary/10 p-4 rounded-lg border border-border space-y-3">
+        <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 p-4 rounded-lg border border-border space-y-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-accent" />
+            <Sparkles className="h-5 w-5 text-indigo-500" />
             <h3 className="font-semibold">Upgrade to Premium</h3>
           </div>
           <p className="text-sm text-muted-foreground">Get exclusive features and boost your influence!</p>
-          <Button size="sm" className="w-full">Upgrade Now</Button>
+          <Button size="sm" className="w-full bg-indigo-600 hover:bg-indigo-700">Upgrade Now</Button>
         </div>
 
       </div>

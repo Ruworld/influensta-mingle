@@ -11,7 +11,8 @@ import {
   Settings,
   Play,
   Film,
-  Sparkles
+  Sparkles,
+  LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -31,6 +32,7 @@ export const Sidebar = () => {
   
   const secondaryItems = [
     { icon: Settings, label: 'Settings', path: '/settings' },
+    { icon: LogOut, label: 'Sign Out', path: '/sign-in' },
   ];
   
   return (
@@ -43,7 +45,7 @@ export const Sidebar = () => {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start gap-3 px-3 font-normal text-muted-foreground hover:text-foreground",
-                  location.pathname === item.path && "bg-accent/10 text-accent font-medium"
+                  location.pathname === item.path && "bg-indigo-50 text-indigo-600 font-medium dark:bg-indigo-900/10"
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -54,7 +56,7 @@ export const Sidebar = () => {
         </nav>
         
         <div className="px-3 py-2">
-          <Button className="w-full gap-2 bg-accent hover:bg-accent/90">
+          <Button className="w-full gap-2 bg-indigo-600 hover:bg-indigo-700">
             <Plus className="h-5 w-5" />
             <span>New Post</span>
           </Button>
@@ -68,7 +70,7 @@ export const Sidebar = () => {
                   variant="ghost"
                   className={cn(
                     "w-full justify-start gap-3 px-3 font-normal text-muted-foreground hover:text-foreground",
-                    location.pathname === item.path && "bg-accent/10 text-accent font-medium"
+                    location.pathname === item.path && "bg-indigo-50 text-indigo-600 font-medium dark:bg-indigo-900/10"
                   )}
                 >
                   <item.icon className="h-5 w-5" />
