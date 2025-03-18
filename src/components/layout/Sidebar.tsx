@@ -5,11 +5,13 @@ import {
   Home, 
   Search, 
   MessageCircle, 
-  Compass, 
   Bell, 
   User, 
   Plus, 
   Settings,
+  Play,
+  Film,
+  Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -20,6 +22,8 @@ export const Sidebar = () => {
   const menuItems = [
     { icon: Home, label: 'Home', path: '/' },
     { icon: Search, label: 'Explore', path: '/explore' },
+    { icon: Play, label: 'Reels', path: '/reels' },
+    { icon: Film, label: 'Shorts', path: '/shorts' },
     { icon: MessageCircle, label: 'Messages', path: '/messages' },
     { icon: Bell, label: 'Notifications', path: '/notifications' },
     { icon: User, label: 'Profile', path: '/profile' },

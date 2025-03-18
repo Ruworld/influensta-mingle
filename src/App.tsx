@@ -9,6 +9,8 @@ import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
 import Explore from "./pages/Explore";
 import NotFound from "./pages/NotFound";
+import Reels from "./pages/Reels";
+import Shorts from "./pages/Shorts";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +25,8 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/explore" element={<Explore />} />
+          <Route path="/reels" element={<Reels />} />
+          <Route path="/shorts" element={<Shorts />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
