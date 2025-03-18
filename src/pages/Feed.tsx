@@ -58,7 +58,7 @@ const posts = [
     disliked: false,
     video: {
       url: 'https://assets.mixkit.co/videos/preview/mixkit-woman-dancing-happily-in-a-field-of-tall-grass-4702-large.mp4',
-      type: 'reel'
+      type: 'reel' as const
     },
     isTrending: true,
   },
