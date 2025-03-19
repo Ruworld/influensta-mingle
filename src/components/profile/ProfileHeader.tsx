@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar } from '@/components/ui/avatar';
@@ -11,6 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from '@/lib/utils';
+import { CollabRequest } from './CollabRequest';
 
 interface ProfileHeaderProps {
   profile: {
@@ -141,22 +143,24 @@ export const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
             variant={isFollowing ? "outline" : "default"}
             className={cn(
               "px-5",
-              isFollowing ? "" : "bg-accent hover:bg-accent/90"
+              isFollowing ? "" : "bg-primary hover:bg-primary/90"
             )}
             onClick={handleFollow}
           >
             {isFollowing ? "Following" : "Follow"}
           </Button>
           
+          <CollabRequest profileName={profile.displayName} profileHandle={profile.username} />
+          
           {isFollowing && (
             <Button 
               variant="outline" 
               size="icon"
-              className={isNotifying ? "text-accent" : ""}
+              className={isNotifying ? "text-primary" : ""}
               onClick={handleNotificationToggle}
             >
               {isNotifying ? (
-                <Bell className="h-5 w-5 fill-accent" />
+                <Bell className="h-5 w-5 fill-primary" />
               ) : (
                 <BellOff className="h-5 w-5" />
               )}
