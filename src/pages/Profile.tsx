@@ -267,10 +267,10 @@ const Profile = () => {
                         <div className="p-3 border-b border-border">
                           <div className="flex items-center gap-2">
                             <div className="h-8 w-8 rounded-full overflow-hidden">
-                              <img src={profileData.avatar} alt={profileData.name} className="h-full w-full object-cover" />
+                              <img src={profileData.avatar} alt={profileData.displayName} className="h-full w-full object-cover" />
                             </div>
                             <div>
-                              <div className="font-medium text-sm">{profileData.name}</div>
+                              <div className="font-medium text-sm">{profileData.displayName}</div>
                               <div className="text-xs text-muted-foreground">{post.date}</div>
                             </div>
                             <Button variant="ghost" size="icon" className="ml-auto h-8 w-8">
@@ -375,3 +375,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
