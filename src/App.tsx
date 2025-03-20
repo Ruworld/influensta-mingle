@@ -15,6 +15,9 @@ import Settings from "./pages/Settings";
 import SignIn from "./pages/auth/SignIn";
 import SignUp from "./pages/auth/SignUp";
 import Notifications from "./pages/Notifications";
+import Community from "./pages/Community";
+import Merchandise from "./pages/Merchandise";
+import Boost from "./pages/Boost";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +38,9 @@ const App = () => (
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/merchandise" element={<Merchandise />} />
+          <Route path="/boost" element={<Boost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

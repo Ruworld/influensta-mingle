@@ -15,7 +15,7 @@ export const Layout = ({ children }: LayoutProps) => {
   
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-background to-background dark:from-blue-900/10 dark:via-background dark:to-background"></div>
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-vibrant-purple/10 via-background to-background dark:from-vibrant-pink/10 dark:via-background dark:to-background"></div>
       
       <Header />
       
