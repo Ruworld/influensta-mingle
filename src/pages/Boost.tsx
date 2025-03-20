@@ -57,7 +57,7 @@ const Boost = () => {
     {
       id: '3',
       type: 'post',
-      title: 'My journey as a creator - what I've learned in the first year',
+      title: "My journey as a creator - what I've learned in the first year",
       views: '842',
       likes: '98',
       thumbnail: 'https://images.unsplash.com/photo-1500081334385-7766153fc642?q=80&w=2069',
