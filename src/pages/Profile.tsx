@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
@@ -27,19 +26,23 @@ import {
   Lock,
   UserPlus,
   MoreHorizontal,
-  Play
+  Play,
+  Trophy
 } from 'lucide-react';
 
 // Sample user profile data
 const profileData = {
-  name: "Alex Rivera",
+  id: "1",
   username: "alex_rivera",
-  bio: "Digital creator | Photography & Travel | Based in San Francisco | Open to collaborations",
+  displayName: "Alex Rivera",
   avatar: "https://source.unsplash.com/random/200x200/?portrait=2",
   coverImage: "https://source.unsplash.com/random/1200x300/?landscape",
-  followers: 12532,
-  following: 542,
-  posts: 128,
+  bio: "Digital creator | Photography & Travel | Based in San Francisco | Open to collaborations",
+  postsCount: 128,
+  followersCount: 12532,
+  followingCount: 542,
+  isVerified: true,
+  isFollowing: false,
   location: "San Francisco, CA",
   website: "alexrivera.com",
   email: "alex@example.com"
@@ -128,29 +131,7 @@ const Profile = () => {
   return (
     <Layout>
       <div className="pb-6">
-        <ProfileHeader 
-          name={profileData.name}
-          username={profileData.username}
-          bio={profileData.bio}
-          avatar={profileData.avatar}
-          coverImage={profileData.coverImage}
-          followers={profileData.followers}
-          following={profileData.following}
-          posts={profileData.posts}
-        >
-          <div className="flex items-center gap-2 mt-4">
-            <Button variant="default" className="bg-vibrant-pink hover:bg-vibrant-purple">
-              <UserPlus className="h-4 w-4 mr-2" /> Follow
-            </Button>
-            <Button variant="outline">
-              <MessageCircle className="h-4 w-4 mr-2" /> Message
-            </Button>
-            <CollabRequest profileName={profileData.name} profileHandle={profileData.username} />
-            <Button variant="ghost" size="icon">
-              <MoreHorizontal className="h-5 w-5" />
-            </Button>
-          </div>
-        </ProfileHeader>
+        <ProfileHeader profile={profileData} />
         
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1 space-y-6">
@@ -160,7 +141,16 @@ const Profile = () => {
                 Influencer Status
               </h3>
               
-              <InfluencerRanking />
+              <InfluencerRanking 
+                rank="gold"
+                progress={78}
+                stats={{
+                  followers: 12532,
+                  engagement: 8.4,
+                  reach: 38500,
+                  collaborations: 15
+                }}
+              />
               
               <div className="mt-5 pt-5 border-t border-border">
                 <h4 className="text-sm font-medium mb-3">Achievements</h4>
