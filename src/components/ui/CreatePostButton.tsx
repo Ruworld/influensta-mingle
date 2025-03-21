@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Image, X, Video, Film } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -42,12 +41,10 @@ export const CreatePostButton = () => {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Clear any existing video
       setVideoPreview(null);
       setVideoType(null);
       videoFile.current = null;
       
-      // Save reference to the file
       imageFile.current = file;
       
       const reader = new FileReader();
@@ -61,14 +58,11 @@ export const CreatePostButton = () => {
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'reel' | 'fullVideo') => {
     const file = e.target.files?.[0];
     if (file) {
-      // Clear any existing image
       setImagePreview(null);
       imageFile.current = null;
       
-      // Save reference to the file
       videoFile.current = file;
       
-      // Simulate upload progress
       let progress = 0;
       const interval = setInterval(() => {
         progress += 5;
@@ -166,10 +160,8 @@ export const CreatePostButton = () => {
       let mediaUrl: string | null = null;
       let videoUrl: string | null = null;
       
-      // Upload media if present
       if (imageFile.current || videoFile.current) {
         const media = await uploadMedia();
-        
         if (media) {
           if (media.type === 'image') {
             mediaUrl = media.url;
@@ -179,7 +171,6 @@ export const CreatePostButton = () => {
         }
       }
       
-      // Create the post
       const { error: postError } = await supabase
         .from('posts')
         .insert({
@@ -201,6 +192,8 @@ export const CreatePostButton = () => {
       imageFile.current = null;
       videoFile.current = null;
       setOpen(false);
+      
+      window.location.reload();
     } catch (error: any) {
       console.error('Error creating post:', error);
       toast.error(error.message || "Failed to create post");

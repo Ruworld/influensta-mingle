@@ -1,50 +1,88 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, UserPlus, Users, Zap, Flame } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { Link } from 'react-router-dom';
+import { UserCheck, UserPlus } from 'lucide-react';
 
 export const RightSidebar = () => {
-  // Sample trending hashtags
-  const trendingHashtags = [
-    { tag: 'photography', count: '254K' },
-    { tag: 'technology', count: '182K' },
-    { tag: 'travel', count: '143K' },
-    { tag: 'webdesign', count: '96K' },
-    { tag: 'productivity', count: '72K' },
-  ];
+  const [recentProfiles, setRecentProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Sample suggested connections with followers and viral posts
-  const suggestedConnections = [
-    { 
-      id: '1', 
-      name: 'Alex Morgan', 
-      avatar: 'https://i.pravatar.cc/150?img=1', 
-      followers: '142.5K',
-      viralPosts: 8,
-      isActive: true
-    },
-    { 
-      id: '2', 
-      name: 'Jamie Chen', 
-      avatar: 'https://i.pravatar.cc/150?img=2', 
-      followers: '89.7K',
-      viralPosts: 5,
-      isActive: false
-    },
-    { 
-      id: '3', 
-      name: 'Taylor Swift', 
-      avatar: 'https://i.pravatar.cc/150?img=3', 
-      followers: '4.2M',
-      viralPosts: 26,
-      isActive: true
-    },
-  ];
+  useEffect(() => {
+    fetchRecentProfiles();
+  }, []);
+
+  const fetchRecentProfiles = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (error) throw error;
+      setRecentProfiles(data || []);
+    } catch (error) {
+      console.error('Error fetching recent profiles:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <aside className="fixed right-0 top-16 h-[calc(100vh-4rem)] w-[280px] border-l border-border bg-background/80 backdrop-blur-md overflow-y-auto py-6 px-4 hidden md:block">
+    <aside className="fixed right-0 top-16 h-[calc(100vh-4rem)] w-[280px] border-l border-border bg-background/80 backdrop-blur-md overflow-y-auto py-6 px-3 hidden lg:block">
       <div className="space-y-6">
+        {/* Recent Profiles Section */}
+        <div className="space-y-4">
+          <h3 className="font-semibold text-lg">New Members</h3>
+          
+          {loading ? (
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex items-center gap-3 animate-pulse">
+                  <div className="h-10 w-10 rounded-full bg-muted"></div>
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 bg-muted rounded w-24"></div>
+                    <div className="h-3 bg-muted rounded w-16"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : recentProfiles.length > 0 ? (
+            <div className="space-y-4">
+              {recentProfiles.map((profile) => (
+                <div key={profile.id} className="flex items-center gap-3">
+                  <Avatar className="h-10 w-10">
+                    <img 
+                      src={profile.avatar_url || `https://source.unsplash.com/random/100x100/?portrait=${profile.id}`} 
+                      alt={profile.full_name || 'User'} 
+                      className="h-full w-full object-cover"
+                    />
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <Link to={`/profile/${profile.id}`} className="font-medium hover:text-accent">
+                        {profile.full_name || 'Anonymous'}
+                      </Link>
+                      {profile.is_verified && (
+                        <Badge variant="secondary" className="h-4">Verified</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">@{profile.username}</p>
+                  </div>
+                  <Button size="sm" variant="ghost" className="ml-auto">
+                    <UserPlus className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-4">No profiles found</p>
+          )}
+        </div>
+
         {/* Trending section */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">

@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Home, 
@@ -29,26 +28,28 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const Sidebar = () => {
   const location = useLocation();
+  const { user, profile, signOut } = useAuth();
   
   // Profile stats for the sidebar
   const profileStats = {
-    profileViews: 63,
-    postImpressions: 32,
-    name: "Alex Rivera",
-    title: "Digital creator | Photography",
+    profileViews: profile ? 0 : 63,
+    postImpressions: profile ? 0 : 32,
+    name: profile?.full_name || "Guest User",
+    title: profile?.bio || "Digital creator",
     location: "San Francisco, California",
     company: "Influensta",
-    avatar: 'https://source.unsplash.com/random/200x200/?portrait=2'
+    avatar: profile?.avatar_url || 'https://source.unsplash.com/random/200x200/?portrait=2'
   };
   
   // Community stats
   const communityStats = {
-    members: 12438,
-    activeMembersToday: 5293,
-    growthRate: "18%"
+    members: 1,
+    activeMembersToday: 1,
+    growthRate: "0%"
   };
   
   const menuItems = [
@@ -70,8 +71,15 @@ export const Sidebar = () => {
     { icon: Calendar, label: 'Events', path: '/events' },
     { icon: Zap, label: 'Boost Content', path: '/boost' },
     { icon: Settings, label: 'Settings', path: '/settings' },
-    { icon: LogOut, label: 'Sign Out', path: '/sign-in' },
   ];
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
   
   return (
     <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-[240px] border-r border-border bg-background/80 backdrop-blur-md overflow-y-auto py-6 px-3 hidden md:block">
@@ -86,7 +94,6 @@ export const Sidebar = () => {
             </div>
             <h3 className="font-semibold text-sm mt-2">{profileStats.name}</h3>
             <p className="text-xs text-muted-foreground text-center">{profileStats.title}</p>
-            <p className="text-xs text-muted-foreground mt-1">{profileStats.location}</p>
           </Link>
           
           <div className="grid grid-cols-2 gap-2 mt-4">
@@ -100,12 +107,12 @@ export const Sidebar = () => {
             </div>
           </div>
           
-          {/* Community Stats Section - Replacing Premium */}
+          {/* Community Stats Section */}
           <div className="mt-4 p-3 bg-gradient-to-r from-fresh-blue/10 to-fresh-teal/10 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-sm font-semibold text-foreground">Community</h4>
               <Badge variant="outline" className="text-fresh-blue border-fresh-blue text-xs animate-pulse-scale">
-                LIVE
+                NEW
               </Badge>
             </div>
             <div className="grid grid-cols-2 gap-x-2 gap-y-2">
@@ -127,6 +134,7 @@ export const Sidebar = () => {
           </div>
         </div>
         
+        {/* Navigation Menu */}
         <nav className="flex flex-col gap-1">
           {menuItems.map((item) => (
             <Link key={item.path} to={item.path}>
@@ -157,6 +165,7 @@ export const Sidebar = () => {
           ))}
         </nav>
         
+        {/* Create Post Button */}
         <div className="px-3 py-2">
           <Button className="w-full gap-2 bg-gradient-to-r from-fresh-blue to-fresh-teal hover:opacity-90 animate-pulse-scale">
             <Plus className="h-5 w-5" />
@@ -164,6 +173,7 @@ export const Sidebar = () => {
           </Button>
         </div>
         
+        {/* Secondary Navigation */}
         <div className="pt-4 border-t border-border">
           <nav className="flex flex-col gap-1">
             {secondaryItems.map((item) => (
@@ -172,19 +182,27 @@ export const Sidebar = () => {
                   variant="ghost"
                   className={cn(
                     "w-full justify-start gap-3 px-3 font-normal text-muted-foreground hover:text-foreground hover:bg-fresh-blue/5",
-                    location.pathname === item.path && "bg-gradient-to-r from-fresh-blue/20 to-fresh-teal/20 text-fresh-blue font-medium",
-                    item.label === 'Boost Content' && "text-fresh-teal font-medium"
+                    location.pathname === item.path && "bg-gradient-to-r from-fresh-blue/20 to-fresh-teal/20 text-fresh-blue font-medium"
                   )}
                 >
                   <item.icon className={cn(
                     "h-5 w-5",
-                    location.pathname === item.path && "text-fresh-blue",
-                    item.label === 'Boost Content' && "text-fresh-teal"
+                    location.pathname === item.path && "text-fresh-blue"
                   )} />
                   <span>{item.label}</span>
                 </Button>
               </Link>
             ))}
+            {user && (
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-3 px-3 font-normal text-muted-foreground hover:text-destructive"
+                onClick={handleSignOut}
+              >
+                <LogOut className="h-5 w-5" />
+                <span>Sign Out</span>
+              </Button>
+            )}
           </nav>
         </div>
       </div>
