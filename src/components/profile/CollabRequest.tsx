@@ -20,7 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-interface CollabRequestProps {
+export interface CollabRequestProps {
   profileName: string;
   profileHandle: string;
 }

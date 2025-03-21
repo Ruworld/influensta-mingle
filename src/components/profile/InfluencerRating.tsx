@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
-interface InfluencerRatingProps {
+export interface InfluencerRatingProps {
   profile: {
     id: string;
     influencerScore: number;

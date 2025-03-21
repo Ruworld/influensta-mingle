@@ -14,7 +14,7 @@ import {
 import { cn } from '@/lib/utils';
 import { CollabRequest } from './CollabRequest';
 
-interface ProfileHeaderProps {
+export interface ProfileHeaderProps {
   profile: {
     id: string;
     username: string;

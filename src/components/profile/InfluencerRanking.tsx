@@ -66,7 +66,7 @@ const rankConfig: Record<RankLevel, RankDetails> = {
   },
 };
 
-interface InfluencerRankingProps {
+export interface InfluencerRankingProps {
   // Current rank of the influencer
   rank: RankLevel;
   // Progress towards next rank (0-100)

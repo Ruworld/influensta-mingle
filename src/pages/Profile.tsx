@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -66,9 +65,7 @@ const Profile = () => {
       if (error) throw error;
       
       if (data) {
-        // Transform the data to match our component props
         const transformedPosts = await Promise.all(data.map(async (post) => {
-          // Get total like count
           const { count } = await supabase
             .from('likes')
             .select('id', { count: 'exact' })
@@ -76,7 +73,6 @@ const Profile = () => {
             
           const likeCount = count || 0;
           
-          // Get comment count
           const { count: commentCount } = await supabase
             .from('comments')
             .select('id', { count: 'exact' })
@@ -96,11 +92,11 @@ const Profile = () => {
             timestamp: formatDistanceToNow(new Date(post.created_at), { addSuffix: true }),
             likes: likeCount,
             comments: commentCount || 0,
-            shares: Math.floor(Math.random() * 20), // Placeholder for shares
+            shares: Math.floor(Math.random() * 20),
             liked: false,
             disliked: false,
             isVerified: profile?.is_verified || false,
-            isTrending: likeCount > 100 // Just for demo
+            isTrending: likeCount > 100
           };
         }));
         
@@ -140,7 +136,6 @@ const Profile = () => {
       
       let avatarUrl = profile?.avatar_url;
       
-      // Upload avatar if changed
       if (avatarFile) {
         setIsUploading(true);
         
@@ -163,7 +158,6 @@ const Profile = () => {
         setIsUploading(false);
       }
       
-      // Update profile
       await updateProfile({
         full_name: profileData.fullName,
         username: profileData.username,
@@ -198,17 +192,16 @@ const Profile = () => {
       <div className="max-w-4xl mx-auto pb-20">
         <ProfileHeader
           profile={{
-            name: profile.full_name || 'User',
-            username: profile.username || 'username',
-            bio: profile.bio || '',
-            website: profile.website || '',
+            id: profile.id || '',
+            username: profile.username || '',
+            displayName: profile.full_name || 'User',
             avatar: profile.avatar_url || '',
-            isVerified: profile.is_verified || false,
-            stats: {
-              posts: userPosts.length,
-              followers: 2345,
-              following: 456,
-            }
+            coverImage: 'https://source.unsplash.com/random/1600x400/?nature',
+            bio: profile.bio || '',
+            postsCount: userPosts.length,
+            followersCount: 2345,
+            followingCount: 456,
+            isVerified: profile.is_verified || false
           }}
         />
         
@@ -369,29 +362,13 @@ const Profile = () => {
           
           <TabsContent value="collabs" className="mt-6 space-y-6">
             <CollabRequest
-              brand={{
-                name: "FashionTrends",
-                logo: "https://source.unsplash.com/random/100x100/?logo=1",
-                verified: true
-              }}
-              offer={{
-                amount: 500,
-                description: "We'd love to collaborate with you on our new summer collection. This would involve 2 posts and 1 Story.",
-                deadline: "May 30, 2023"
-              }}
+              profileName="FashionTrends"
+              profileHandle="fashiontrends"
             />
             
             <CollabRequest
-              brand={{
-                name: "TechGadgets",
-                logo: "https://source.unsplash.com/random/100x100/?logo=2",
-                verified: true
-              }}
-              offer={{
-                amount: 750,
-                description: "Review our latest smartphone and share your honest opinions with your audience.",
-                deadline: "June 15, 2023"
-              }}
+              profileName="TechGadgets"
+              profileHandle="techgadgets"
             />
           </TabsContent>
           
@@ -406,8 +383,33 @@ const Profile = () => {
           <TabsContent value="earnings" className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="glass-panel p-6">
               <h3 className="text-lg font-medium mb-4">Influencer Stats</h3>
-              <InfluencerRanking rank="Rising Star" percentile={85} />
-              <InfluencerRating rating={4.7} reviews={28} />
+              <InfluencerRanking 
+                rank="bronze"
+                progress={85}
+                stats={{
+                  followers: 2345,
+                  engagement: 6.8,
+                  reach: 12000,
+                  collaborations: 28
+                }}
+              />
+              
+              <InfluencerRating 
+                profile={{
+                  id: user.id,
+                  influencerScore: 4.7,
+                  influencerCategory: "Fashion & Lifestyle",
+                  badgeLevel: "Gold",
+                  endorsements: 28,
+                  achievements: [
+                    {
+                      id: "1",
+                      title: "Rising Star",
+                      icon: "star"
+                    }
+                  ]
+                }}
+              />
               
               <div className="mt-6">
                 <h4 className="text-sm font-medium mb-2">Engagement Rate</h4>
