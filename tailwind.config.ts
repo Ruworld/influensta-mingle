@@ -63,15 +63,17 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				vibrant: {
-					pink: '#FF3366',
-					purple: '#9933FF',
+				fresh: {
 					blue: '#3366FF',
+					teal: '#33CCCC',
 					cyan: '#33CCFF',
-					green: '#33FF99',
-					yellow: '#FFCC33',
-					orange: '#FF9933',
-					red: '#FF3333',
+					green: '#33CC99',
+					lime: '#CCFF33',
+					indigo: '#5E5CE6',
+					navy: '#0C2340',
+					slate: '#64748B',
+					gray: '#94A3B8',
+					lightGray: '#E2E8F0',
 				},
 			},
 			borderRadius: {
@@ -164,10 +166,10 @@ export default {
 				},
 				'glow': {
 					'0%, 100%': {
-						boxShadow: '0 0 5px rgba(255, 51, 102, 0.5)'
+						boxShadow: '0 0 5px rgba(51, 102, 255, 0.5)'
 					},
 					'50%': {
-						boxShadow: '0 0 20px rgba(255, 51, 102, 0.8)'
+						boxShadow: '0 0 20px rgba(51, 102, 255, 0.8)'
 					}
 				}
 			},

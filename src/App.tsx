@@ -18,6 +18,8 @@ import Notifications from "./pages/Notifications";
 import Community from "./pages/Community";
 import Merchandise from "./pages/Merchandise";
 import Boost from "./pages/Boost";
+import Promotions from "./pages/Promotions";
+import MyStore from "./pages/MyStore";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +42,8 @@ const App = () => (
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/community" element={<Community />} />
           <Route path="/merchandise" element={<Merchandise />} />
+          <Route path="/promotions" element={<Promotions />} />
+          <Route path="/my-store" element={<MyStore />} />
           <Route path="/boost" element={<Boost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

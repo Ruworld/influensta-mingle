@@ -15,16 +15,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11.2%;
 
-    --primary: 210 79% 46%;
+    --primary: 220 79% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 215 40% 96.1%;
     --secondary-foreground: 222 47% 11.2%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 215 40% 96.1%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 210 79% 46%;
+    --accent: 220 79% 60%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -32,18 +32,18 @@
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 210 79% 46%;
+    --ring: 220 79% 60%;
 
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 5% 26%;
-    --sidebar-primary: 210 79% 46%;
+    --sidebar-primary: 220 79% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 5% 96%;
     --sidebar-accent-foreground: 240 6% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 210 79% 46%;
+    --sidebar-ring: 220 79% 60%;
   }
 
   .dark {
@@ -56,7 +56,7 @@
     --popover: 222 47% 11.2%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 79% 46%;
+    --primary: 220 79% 60%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 217 33% 17.5%;
@@ -65,7 +65,7 @@
     --muted: 217 33% 17.5%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 210 79% 46%;
+    --accent: 220 79% 60%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 63% 31%;
@@ -77,12 +77,12 @@
     
     --sidebar-background: 240 6% 10%;
     --sidebar-foreground: 240 5% 96%;
-    --sidebar-primary: 210 79% 46%;
+    --sidebar-primary: 220 79% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 4% 16%;
     --sidebar-accent-foreground: 240 5% 96%;
     --sidebar-border: 240 4% 16%;
-    --sidebar-ring: 210 79% 46%;
+    --sidebar-ring: 220 79% 60%;
   }
 }
 
@@ -149,13 +149,13 @@
     @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
   
-  /* Instagram-like UI classes */
+  /* Fresh UI classes replacing Instagram-like classes */
   .gradient-border {
-    @apply relative before:absolute before:inset-0 before:p-[2px] before:rounded-full before:bg-gradient-to-tr before:from-yellow-400 before:via-orange-500 before:to-pink-500 before:content-[''];
+    @apply relative before:absolute before:inset-0 before:p-[2px] before:rounded-full before:bg-gradient-to-tr before:from-fresh-blue before:via-fresh-teal before:to-fresh-cyan before:content-[''];
   }
   
-  .instagram-gradient {
-    @apply bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600;
+  .fresh-gradient {
+    @apply bg-gradient-to-tr from-fresh-blue via-fresh-teal to-fresh-cyan;
   }
   
   .fomo-pulse {
@@ -163,7 +163,7 @@
   }
   
   .fomo-badge {
-    @apply absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 min-w-5 flex items-center justify-center px-1 animate-bounce;
+    @apply absolute -top-2 -right-2 bg-fresh-blue text-white text-xs rounded-full h-5 min-w-5 flex items-center justify-center px-1 animate-bounce;
   }
   
   /* Hide scrollbar but allow scrolling */
@@ -176,7 +176,7 @@
     display: none;  /* Chrome, Safari and Opera */
   }
   
-  /* Trendy button effects */
+  /* Fresh button effects */
   .btn-hover-effect {
     @apply relative overflow-hidden transition-all duration-300;
   }
@@ -191,16 +191,16 @@
   
   /* New post indicator */
   .new-post-indicator {
-    @apply absolute -top-1 -right-1 h-3 w-3 bg-accent rounded-full animate-ping;
+    @apply absolute -top-1 -right-1 h-3 w-3 bg-fresh-blue rounded-full animate-ping;
   }
   
   /* Verified badge glow effect */
   .verified-badge {
-    @apply text-accent relative;
+    @apply text-fresh-blue relative;
   }
   
   .verified-badge::after {
-    @apply content-[''] absolute inset-0 rounded-full blur-sm bg-accent/30 z-[-1];
+    @apply content-[''] absolute inset-0 rounded-full blur-sm bg-fresh-blue/30 z-[-1];
   }
   
   /* Trending animation */
@@ -226,7 +226,7 @@
   }
   
   .limited-time::before {
-    @apply content-[''] absolute top-0 right-0 bg-gradient-to-r from-yellow-400 to-red-500 text-xs text-white px-2 py-0.5 rounded-bl-lg shadow-md;
+    @apply content-[''] absolute top-0 right-0 bg-gradient-to-r from-fresh-blue to-fresh-teal text-xs text-white px-2 py-0.5 rounded-bl-lg shadow-md;
     content: "LIMITED TIME";
   }
 }
