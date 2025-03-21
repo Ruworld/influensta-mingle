@@ -12,6 +12,10 @@ type Profile = {
   bio: string | null;
   website: string | null;
   is_verified: boolean;
+  views_count?: number;
+  post_impressions?: number;
+  location?: string;
+  company?: string;
 };
 
 type AuthContextType = {
@@ -20,6 +24,7 @@ type AuthContextType = {
   session: Session | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signUp: (email: string, password: string, full_name: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
@@ -38,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, newSession) => {
+        console.log("Auth state changed:", event, newSession?.user?.id);
         setSession(newSession);
         setUser(newSession?.user ?? null);
         
@@ -54,6 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         setIsLoading(true);
         const { data: { session: initialSession } } = await supabase.auth.getSession();
+        console.log("Initial session:", initialSession?.user?.id);
         setSession(initialSession);
         setUser(initialSession?.user ?? null);
         
@@ -81,13 +88,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchProfile = async (userId: string) => {
     try {
+      console.log("Fetching profile for user:", userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching profile:', error.message);
+        throw error;
+      }
+      console.log("Profile data:", data);
       setProfile(data as Profile);
     } catch (error: any) {
       console.error('Error fetching profile:', error.message);
@@ -106,6 +118,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Error signing in:', error.message);
       toast({
         title: "Sign in failed",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/auth/callback',
+        }
+      });
+      
+      if (error) throw error;
+      
+      // The user will be redirected to Google's OAuth page
+      // After authentication, they'll be redirected back to our app
+      
+    } catch (error: any) {
+      console.error('Error signing in with Google:', error.message);
+      toast({
+        title: "Google sign in failed",
         description: error.message,
         variant: "destructive",
       });
@@ -172,6 +209,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error) throw error;
       
+      // Update the profile state with new data
       setProfile(prev => prev ? { ...prev, ...updates } : null);
       
       toast({
@@ -195,6 +233,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     session,
     isLoading,
     signIn,
+    signInWithGoogle,
     signUp,
     signOut,
     updateProfile,

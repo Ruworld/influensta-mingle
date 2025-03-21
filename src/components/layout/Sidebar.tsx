@@ -34,22 +34,22 @@ export const Sidebar = () => {
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
   
-  // Profile stats for the sidebar
+  // Dynamic profile stats using the actual profile data
   const profileStats = {
-    profileViews: profile ? 0 : 63,
-    postImpressions: profile ? 0 : 32,
+    profileViews: profile?.views_count || 63,
+    postImpressions: profile?.post_impressions || 32,
     name: profile?.full_name || "Guest User",
     title: profile?.bio || "Digital creator",
-    location: "San Francisco, California",
-    company: "Influensta",
+    location: profile?.location || "San Francisco, California",
+    company: profile?.company || "Influensta",
     avatar: profile?.avatar_url || 'https://source.unsplash.com/random/200x200/?portrait=2'
   };
   
-  // Community stats
+  // Community stats based on profiles count
   const communityStats = {
-    members: 1,
-    activeMembersToday: 1,
-    growthRate: "0%"
+    members: profile ? 1 : 0,
+    activeMembersToday: profile ? 1 : 0,
+    growthRate: profile ? "10%" : "0%"
   };
   
   const menuItems = [

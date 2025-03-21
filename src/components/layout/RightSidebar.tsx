@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import { UserCheck, UserPlus, TrendingUp, Users, Flame, Zap } from 'lucide-react';
 
-// Define the missing data structures
+// Define the data structures
 const trendingHashtags = [
   { tag: 'photography', count: 2452 },
   { tag: 'startup', count: 1893 },
