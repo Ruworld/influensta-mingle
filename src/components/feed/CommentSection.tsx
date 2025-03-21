@@ -1,89 +1,100 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { formatDistanceToNow } from 'date-fns';
+import { toast } from 'sonner';
 
 interface CommentSectionProps {
   postId: string;
 }
 
-// Mock comments data
-const mockComments = {
-  '1': [
-    {
-      id: '1',
-      author: {
-        username: 'Emma Thompson',
-        handle: 'emmathompson',
-        avatar: 'https://source.unsplash.com/random/100x100/?portrait=8',
-      },
-      content: 'This is absolutely fantastic! Love your work!',
-      timestamp: '1 hour ago',
-      sentiment: 'positive' as const,
-      likes: 12,
-    },
-    {
-      id: '2',
-      author: {
-        username: 'Alex Chen',
-        handle: 'alexchen',
-        avatar: 'https://source.unsplash.com/random/100x100/?portrait=9',
-      },
-      content: 'I don\'t think this is your best work. The lighting seems off.',
-      timestamp: '2 hours ago',
-      sentiment: 'negative' as const,
-      likes: 3,
-    },
-    {
-      id: '3',
-      author: {
-        username: 'Jordan Rivera',
-        handle: 'jordanrivera',
-        avatar: 'https://source.unsplash.com/random/100x100/?portrait=10',
-      },
-      content: 'So inspiring! Can you share more about your process?',
-      timestamp: '3 hours ago',
-      sentiment: 'positive' as const,
-      likes: 8,
-    },
-    {
-      id: '4',
-      author: {
-        username: 'Taylor Kim',
-        handle: 'taylorkim',
-        avatar: 'https://source.unsplash.com/random/100x100/?portrait=11',
-      },
-      content: 'The composition feels a bit amateur compared to your usual standard.',
-      timestamp: '5 hours ago',
-      sentiment: 'negative' as const,
-      likes: 1,
-    },
-  ],
-  '2': [
-    {
-      id: '1',
-      author: {
-        username: 'Morgan Smith',
-        handle: 'morgansmith',
-        avatar: 'https://source.unsplash.com/random/100x100/?portrait=12',
-      },
-      content: 'I love this cafe too! Perfect work environment.',
-      timestamp: '30 min ago',
-      sentiment: 'positive' as const,
-      likes: 5,
-    },
-  ],
-};
+interface Comment {
+  id: string;
+  author: {
+    id: string;
+    username: string;
+    handle: string;
+    avatar: string;
+  };
+  content: string;
+  timestamp: string;
+  sentiment: 'positive' | 'negative' | 'neutral';
+  likes: number;
+}
 
 export const CommentSection = ({ postId }: CommentSectionProps) => {
   const [newComment, setNewComment] = useState('');
   const [activeTab, setActiveTab] = useState('all');
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user, profile } = useAuth();
   
-  const comments = mockComments[postId as keyof typeof mockComments] || [];
+  useEffect(() => {
+    fetchComments();
+  }, [postId]);
+  
+  const fetchComments = async () => {
+    try {
+      setIsLoading(true);
+      
+      const { data, error } = await supabase
+        .from('comments')
+        .select(`
+          *,
+          profiles:user_id (id, username, full_name, avatar_url)
+        `)
+        .eq('post_id', postId)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      
+      if (data) {
+        // Transform the data
+        const transformedComments = data.map(comment => {
+          // Very basic sentiment analysis - just for demo
+          const content = comment.content.toLowerCase();
+          let sentiment: 'positive' | 'negative' | 'neutral' = 'neutral';
+          
+          const positiveWords = ['good', 'great', 'awesome', 'amazing', 'love', 'like', 'fantastic', 'excellent'];
+          const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'dislike', 'poor', 'horrible'];
+          
+          if (positiveWords.some(word => content.includes(word))) {
+            sentiment = 'positive';
+          } else if (negativeWords.some(word => content.includes(word))) {
+            sentiment = 'negative';
+          }
+          
+          return {
+            id: comment.id,
+            author: {
+              id: comment.profiles.id,
+              username: comment.profiles.full_name || 'User',
+              handle: comment.profiles.username || 'user',
+              avatar: comment.profiles.avatar_url || 'https://source.unsplash.com/random/100x100/?portrait=1',
+            },
+            content: comment.content,
+            timestamp: formatDistanceToNow(new Date(comment.created_at), { addSuffix: true }),
+            sentiment,
+            likes: Math.floor(Math.random() * 10) // Just for demo
+          };
+        });
+        
+        setComments(transformedComments);
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   const positiveComments = comments.filter(comment => comment.sentiment === 'positive');
   const negativeComments = comments.filter(comment => comment.sentiment === 'negative');
@@ -94,15 +105,37 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
       ? positiveComments 
       : negativeComments;
   
-  const handleSubmitComment = (e: React.FormEvent) => {
+  const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) return;
     
-    // Here we would normally send the comment to an API
-    console.log("New comment:", newComment);
-    setNewComment('');
+    if (!user) {
+      toast.error("Please sign in to add a comment");
+      return;
+    }
     
-    // For demo purposes, we're not actually adding the comment to the list
+    try {
+      setIsSubmitting(true);
+      
+      const { error } = await supabase
+        .from('comments')
+        .insert({
+          post_id: postId,
+          user_id: user.id,
+          content: newComment.trim()
+        });
+      
+      if (error) throw error;
+      
+      setNewComment('');
+      await fetchComments(); // Refresh comments
+      toast.success("Comment added successfully");
+    } catch (error: any) {
+      console.error('Error submitting comment:', error);
+      toast.error(error.message || "Failed to add comment");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
@@ -123,7 +156,22 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
         </TabsList>
         
         <TabsContent value="all" className="space-y-3 mt-3">
-          {renderComments(filteredComments)}
+          {isLoading ? (
+            // Loading skeleton
+            Array.from({ length: 2 }).map((_, index) => (
+              <div key={index} className="flex gap-3 animate-pulse">
+                <div className="h-8 w-8 rounded-full bg-muted"></div>
+                <div className="flex-1">
+                  <div className="bg-muted p-3 rounded-lg">
+                    <div className="h-4 w-24 bg-muted-foreground/20 rounded mb-2"></div>
+                    <div className="h-4 w-full bg-muted-foreground/20 rounded"></div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            renderComments(filteredComments)
+          )}
         </TabsContent>
         
         <TabsContent value="positive" className="space-y-3 mt-3">
@@ -141,26 +189,26 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           className="flex-1"
+          disabled={isSubmitting || !user}
         />
-        <Button type="submit" disabled={!newComment.trim()}>Post</Button>
+        <Button 
+          type="submit" 
+          disabled={!newComment.trim() || isSubmitting || !user}
+          className="bg-accent hover:bg-accent/90"
+        >
+          {isSubmitting ? (
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+          ) : (
+            "Post"
+          )}
+        </Button>
       </form>
     </div>
   );
 };
 
 // Helper function to render comments
-function renderComments(comments: Array<{
-  id: string;
-  author: {
-    username: string;
-    handle: string;
-    avatar: string;
-  };
-  content: string;
-  timestamp: string;
-  sentiment: 'positive' | 'negative';
-  likes: number;
-}>) {
+function renderComments(comments: Comment[]) {
   if (comments.length === 0) {
     return (
       <div className="text-center py-4 text-muted-foreground">

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { FeedPost } from '@/components/feed/FeedPost';
 import { CreatePostButton } from '@/components/ui/CreatePostButton';
@@ -8,78 +8,11 @@ import { TrendingTopics } from '@/components/feed/TrendingTopics';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { formatDistanceToNow } from 'date-fns';
 
-// Example data
-const posts = [
-  {
-    id: '1',
-    username: 'Sarah Johnson',
-    handle: 'sarahjohnson',
-    avatar: 'https://source.unsplash.com/random/100x100/?portrait=1',
-    content: "Just wrapped up an amazing photoshoot for a new collaboration. Can't wait to share the results with you all! 📸✨",
-    image: 'https://source.unsplash.com/random/1200x800/?photoshoot',
-    timestamp: '2 hours ago',
-    likes: 423,
-    dislikes: 15,
-    comments: 47,
-    shares: 12,
-    liked: false,
-    disliked: false,
-    isVerified: true,
-    isTrending: true,
-  },
-  {
-    id: '2',
-    username: 'Alex Rivera',
-    handle: 'alexrivera',
-    avatar: 'https://source.unsplash.com/random/100x100/?portrait=2',
-    content: "Working from this beautiful cafe today. The ambiance is just perfect for creativity to flow. Anyone else love finding new workspaces? ☕️💻",
-    image: 'https://source.unsplash.com/random/1200x800/?cafe',
-    timestamp: '4 hours ago',
-    likes: 287,
-    dislikes: 8,
-    comments: 32,
-    shares: 5,
-    liked: true,
-    disliked: false,
-  },
-  {
-    id: '3',
-    username: 'Michelle Lee',
-    handle: 'michellelee',
-    avatar: 'https://source.unsplash.com/random/100x100/?portrait=3',
-    content: 'Just launched my new website! Check it out and let me know what you think. Link in bio.',
-    timestamp: '6 hours ago',
-    likes: 567,
-    dislikes: 21,
-    comments: 84,
-    shares: 23,
-    liked: false,
-    disliked: false,
-    video: {
-      url: 'https://assets.mixkit.co/videos/preview/mixkit-woman-dancing-happily-in-a-field-of-tall-grass-4702-large.mp4',
-      type: 'reel' as const
-    },
-    isTrending: true,
-  },
-  {
-    id: '4',
-    username: 'David Chen',
-    handle: 'davidchen',
-    avatar: 'https://source.unsplash.com/random/100x100/?portrait=4',
-    content: 'The key to staying relevant in this industry is constant innovation. Always be learning, always be growing.',
-    timestamp: 'Yesterday',
-    likes: 832,
-    dislikes: 12,
-    comments: 65,
-    shares: 41,
-    liked: false,
-    disliked: false,
-    isVerified: true,
-  },
-];
-
-// Stories data
+// Example data for stories 
 const stories = [
   {
     id: '1',
@@ -137,6 +70,89 @@ const trendingTopics = [
 
 const Feed = () => {
   const [activeTab, setActiveTab] = useState("for-you");
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    fetchPosts();
+  }, [activeTab, user]);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      
+      const { data, error } = await supabase
+        .from('posts')
+        .select(`
+          *,
+          profiles:user_id (username, full_name, avatar_url, is_verified)
+        `)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      
+      if (data) {
+        // Transform the data to match our component props
+        const transformedPosts = await Promise.all(data.map(async (post) => {
+          // Check if user has liked this post
+          let isLiked = false;
+          let likeCount = 0;
+          
+          if (user) {
+            const { data: likesData } = await supabase
+              .from('likes')
+              .select('id')
+              .eq('post_id', post.id)
+              .eq('user_id', user.id);
+              
+            isLiked = !!likesData && likesData.length > 0;
+          }
+          
+          // Get total like count
+          const { count } = await supabase
+            .from('likes')
+            .select('id', { count: 'exact' })
+            .eq('post_id', post.id);
+            
+          likeCount = count || 0;
+          
+          // Get comment count
+          const { count: commentCount } = await supabase
+            .from('comments')
+            .select('id', { count: 'exact' })
+            .eq('post_id', post.id);
+          
+          return {
+            id: post.id,
+            username: post.profiles?.full_name || 'Anonymous',
+            handle: post.profiles?.username || 'user',
+            avatar: post.profiles?.avatar_url || 'https://source.unsplash.com/random/100x100/?portrait=1',
+            content: post.content || '',
+            image: post.image_url || undefined,
+            video: post.video_url ? {
+              url: post.video_url,
+              type: post.video_type || 'fullVideo'
+            } : undefined,
+            timestamp: formatDistanceToNow(new Date(post.created_at), { addSuffix: true }),
+            likes: likeCount,
+            comments: commentCount || 0,
+            shares: Math.floor(Math.random() * 20), // Placeholder for shares
+            liked: isLiked,
+            disliked: false,
+            isVerified: post.profiles?.is_verified || false,
+            isTrending: likeCount > 100 // Just for demo
+          };
+        }));
+        
+        setPosts(transformedPosts);
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Layout>
@@ -196,16 +212,41 @@ const Feed = () => {
         
         {/* Posts Feed */}
         <div className="px-4 space-y-4">
-          {posts.map((post) => (
-            <div key={post.id} className="relative">
-              {post.isTrending && (
-                <Badge className="absolute -top-2 -right-2 z-10 bg-gradient-to-r from-orange-400 to-pink-500 animate-pulse">
-                  <TrendingUp className="h-3 w-3 mr-1" /> Trending
-                </Badge>
-              )}
-              <FeedPost post={post} />
+          {loading ? (
+            // Loading skeleton
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="glass-panel p-4 animate-pulse">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-10 w-10 rounded-full bg-muted"></div>
+                  <div className="space-y-2">
+                    <div className="h-4 w-24 bg-muted rounded"></div>
+                    <div className="h-3 w-16 bg-muted rounded"></div>
+                  </div>
+                </div>
+                <div className="space-y-2 mb-4">
+                  <div className="h-4 w-full bg-muted rounded"></div>
+                  <div className="h-4 w-4/5 bg-muted rounded"></div>
+                </div>
+                <div className="h-64 w-full bg-muted rounded"></div>
+              </div>
+            ))
+          ) : posts.length > 0 ? (
+            posts.map((post) => (
+              <div key={post.id} className="relative">
+                {post.isTrending && (
+                  <Badge className="absolute -top-2 -right-2 z-10 bg-gradient-to-r from-orange-400 to-pink-500 animate-pulse">
+                    <TrendingUp className="h-3 w-3 mr-1" /> Trending
+                  </Badge>
+                )}
+                <FeedPost post={post} />
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground mb-4">No posts to display</p>
+              <p className="text-sm">Be the first to create a post!</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </Layout>

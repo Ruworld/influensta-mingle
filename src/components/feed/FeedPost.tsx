@@ -20,6 +20,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { CommentSection } from '@/components/feed/CommentSection';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface FeedPostProps {
   post: {
@@ -41,6 +44,8 @@ interface FeedPostProps {
     liked?: boolean;
     disliked?: boolean;
     saved?: boolean;
+    isVerified?: boolean;
+    isTrending?: boolean;
   };
 }
 
@@ -53,24 +58,59 @@ export const FeedPost = ({ post }: FeedPostProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { user } = useAuth();
   
-  const handleLike = () => {
-    if (isLiked) {
-      setLikeCount(likeCount - 1);
-      setIsLiked(false);
-    } else {
-      setLikeCount(likeCount + 1);
-      setIsLiked(true);
-      
-      // If the post was disliked, remove the dislike
-      if (isDisliked) {
-        setDislikeCount(dislikeCount - 1);
-        setIsDisliked(false);
+  const handleLike = async () => {
+    if (!user) {
+      toast.error("Please sign in to like posts");
+      return;
+    }
+
+    try {
+      if (isLiked) {
+        // Remove like
+        const { error } = await supabase
+          .from('likes')
+          .delete()
+          .eq('post_id', post.id)
+          .eq('user_id', user.id);
+          
+        if (error) throw error;
+        
+        setLikeCount(likeCount - 1);
+        setIsLiked(false);
+      } else {
+        // Add like
+        // If post was disliked, remove the dislike first
+        if (isDisliked) {
+          setDislikeCount(dislikeCount - 1);
+          setIsDisliked(false);
+        }
+        
+        const { error } = await supabase
+          .from('likes')
+          .insert({
+            post_id: post.id,
+            user_id: user.id
+          });
+          
+        if (error) throw error;
+        
+        setLikeCount(likeCount + 1);
+        setIsLiked(true);
       }
+    } catch (error) {
+      console.error('Error handling like:', error);
+      toast.error("Failed to process your like");
     }
   };
   
   const handleDislike = () => {
+    if (!user) {
+      toast.error("Please sign in to dislike posts");
+      return;
+    }
+    
     if (isDisliked) {
       setDislikeCount(dislikeCount - 1);
       setIsDisliked(false);
@@ -87,7 +127,13 @@ export const FeedPost = ({ post }: FeedPostProps) => {
   };
   
   const handleSave = () => {
+    if (!user) {
+      toast.error("Please sign in to save posts");
+      return;
+    }
+    
     setIsSaved(!isSaved);
+    toast.success(isSaved ? "Post removed from saved items" : "Post saved successfully");
   };
   
   const toggleVideoPlay = () => {
@@ -102,6 +148,11 @@ export const FeedPost = ({ post }: FeedPostProps) => {
   };
   
   const toggleComments = () => {
+    if (!showComments && !user) {
+      toast.error("Please sign in to view comments");
+      return;
+    }
+    
     setShowComments(!showComments);
   };
   
