@@ -12,6 +12,7 @@ type Profile = {
   bio: string | null;
   website: string | null;
   is_verified: boolean;
+  // Add the missing fields that we're using in the sidebar
   views_count?: number;
   post_impressions?: number;
   location?: string;
@@ -100,7 +101,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
       console.log("Profile data:", data);
-      setProfile(data as Profile);
+      
+      // Create a profile object with default values for fields not in the database
+      const profileData: Profile = {
+        ...data,
+        views_count: data.views_count || 0,
+        post_impressions: data.post_impressions || 0,
+        location: data.location || null,
+        company: data.company || null
+      };
+      
+      setProfile(profileData);
     } catch (error: any) {
       console.error('Error fetching profile:', error.message);
     }
@@ -202,9 +213,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       if (!user) throw new Error('User not authenticated');
       
+      // Filter out properties that don't exist in the profiles table
+      const { views_count, post_impressions, location, company, ...validUpdates } = updates;
+      
       const { error } = await supabase
         .from('profiles')
-        .update(updates)
+        .update(validUpdates)
         .eq('id', user.id);
       
       if (error) throw error;

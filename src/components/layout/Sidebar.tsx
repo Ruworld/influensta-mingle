@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -46,13 +45,8 @@ export const Sidebar = () => {
     if (profile) {
       // Default values in case we don't have real data yet
       const statsData = {
-        profileViews: profile?.views_count || 0,
-        postImpressions: profile?.post_impressions || 0,
-        name: profile?.full_name || "Guest User",
-        title: profile?.bio || "Digital creator",
-        location: profile?.location || "San Francisco, California",
-        company: profile?.company || "Influensta",
-        avatar: profile?.avatar_url || 'https://source.unsplash.com/random/200x200/?portrait=2'
+        profileViews: profile.views_count || 0,
+        postImpressions: profile.post_impressions || 0,
       };
       
       setProfileStats(statsData);
