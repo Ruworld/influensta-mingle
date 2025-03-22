@@ -23,7 +23,7 @@ export const Layout = ({ children }: LayoutProps) => {
         {!isMobile && <Sidebar />}
         
         <main className="flex-1 pt-16 pb-20 md:pb-6 md:pl-[240px] md:pr-[280px] min-h-screen transition-all duration-300 ease-in-out">
-          <div className="container px-4 md:px-8 max-w-3xl mx-auto animate-fade-in">
+          <div className="container px-4 md:px-8 max-w-full md:max-w-3xl mx-auto animate-fade-in">
             {children}
           </div>
         </main>

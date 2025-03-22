@@ -1,23 +1,25 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Search, Heart, User, Plus, Play, MessageCircle } from 'lucide-react';
+import { Home, Search, User, Plus, Play, MessageCircle, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const MobileNav = () => {
   const location = useLocation();
+  const { user } = useAuth();
   
   const menuItems = [
     { icon: Home, label: 'Home', path: '/' },
     { icon: Search, label: 'Explore', path: '/explore' },
-    { icon: Play, label: 'Reels', path: '/reels', hasNotification: true },
-    { icon: MessageCircle, label: 'Messages', path: '/messages' },
+    { icon: Bell, label: 'Notifications', path: '/notifications', hasNotification: true },
+    { icon: MessageCircle, label: 'Messages', path: '/messages', hasNotification: true },
     { icon: User, label: 'Profile', path: '/profile' },
   ];
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-t border-border md:hidden z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-lg border-t border-border md:hidden z-50">
       <div className="flex items-center justify-around h-16 px-2">
         {menuItems.map((item) => (
           <Link
@@ -34,7 +36,7 @@ export const MobileNav = () => {
               className={cn(
                 "h-6 w-6",
                 location.pathname === item.path
-                  ? "text-accent"
+                  ? "text-fresh-blue"
                   : "text-muted-foreground"
               )}
             />
@@ -42,7 +44,7 @@ export const MobileNav = () => {
               className={cn(
                 "text-[10px]",
                 location.pathname === item.path
-                  ? "text-accent font-medium"
+                  ? "text-fresh-blue font-medium"
                   : "text-muted-foreground"
               )}
             >
@@ -55,7 +57,7 @@ export const MobileNav = () => {
       {/* Floating post button */}
       <Link
         to="/create"
-        className="absolute -top-14 right-6 h-14 w-14 rounded-full bg-gradient-to-tr from-accent to-purple-500 shadow-lg flex items-center justify-center"
+        className="absolute -top-14 right-6 h-14 w-14 rounded-full bg-gradient-to-tr from-fresh-blue to-fresh-teal shadow-lg flex items-center justify-center touch-manipulation"
       >
         <Plus className="h-7 w-7 text-white" />
       </Link>

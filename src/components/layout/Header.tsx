@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bell, Heart, Search, LogOut, Settings, User, Bookmark, MessageCircle } from 'lucide-react';
+import { Bell, Heart, Search, LogOut, Settings, User, Bookmark, MessageCircle, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -33,6 +33,10 @@ export const Header = () => {
         <div className="flex items-center gap-6">
           <Link to="/" className="font-semibold text-2xl tracking-tight text-foreground instagram-gradient bg-clip-text text-transparent">
             influensta
+          </Link>
+          <Link to="/" className="text-muted-foreground hover:text-foreground hidden sm:flex items-center gap-1">
+            <Home className="h-5 w-5" />
+            <span className="font-medium">Home</span>
           </Link>
         </div>
         
