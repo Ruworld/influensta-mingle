@@ -19,7 +19,7 @@ export const MobileNav = () => {
   ];
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-lg border-t border-border md:hidden z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-lg border-t border-border z-50">
       <div className="flex items-center justify-around h-16 px-2">
         {menuItems.map((item) => (
           <Link
