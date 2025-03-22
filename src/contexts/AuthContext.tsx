@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,11 +11,10 @@ type Profile = {
   bio: string | null;
   website: string | null;
   is_verified: boolean;
-  // Add the missing fields that we're using in the sidebar
-  views_count?: number;
-  post_impressions?: number;
-  location?: string;
-  company?: string;
+  views_count: number | null;
+  post_impressions: number | null;
+  location: string | null;
+  company: string | null;
 };
 
 type AuthContextType = {
@@ -41,7 +39,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { toast } = useToast();
 
   useEffect(() => {
-    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, newSession) => {
         console.log("Auth state changed:", event, newSession?.user?.id);
@@ -56,7 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    // THEN check for existing session
     const initializeAuth = async () => {
       try {
         setIsLoading(true);
@@ -102,16 +98,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       console.log("Profile data:", data);
       
-      // Create a profile object with default values for fields not in the database
-      const profileData: Profile = {
-        ...data,
-        views_count: data.views_count || 0,
-        post_impressions: data.post_impressions || 0,
-        location: data.location || null,
-        company: data.company || null
-      };
-      
-      setProfile(profileData);
+      setProfile(data as Profile);
     } catch (error: any) {
       console.error('Error fetching profile:', error.message);
     }
@@ -213,17 +200,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       if (!user) throw new Error('User not authenticated');
       
-      // Filter out properties that don't exist in the profiles table
-      const { views_count, post_impressions, location, company, ...validUpdates } = updates;
-      
       const { error } = await supabase
         .from('profiles')
-        .update(validUpdates)
+        .update(updates)
         .eq('id', user.id);
       
       if (error) throw error;
       
-      // Update the profile state with new data
       setProfile(prev => prev ? { ...prev, ...updates } : null);
       
       toast({
