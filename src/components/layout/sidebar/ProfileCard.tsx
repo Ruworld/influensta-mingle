@@ -12,12 +12,6 @@ interface ProfileStats {
   postImpressions: number;
 }
 
-interface CommunityStats {
-  members: number;
-  activeMembersToday: number;
-  growthRate: string;
-}
-
 export const ProfileCard = () => {
   const { user, profile } = useAuth();
   const [profileStats, setProfileStats] = useState<ProfileStats>({
@@ -65,13 +59,6 @@ export const ProfileCard = () => {
       }
     }
   }, [profile, user]);
-  
-  // Community stats based on profiles count
-  const communityStats: CommunityStats = {
-    members: profile ? 1 : 0,
-    activeMembersToday: profile ? 1 : 0,
-    growthRate: profile ? "10%" : "0%"
-  };
 
   return (
     <div className="rounded-lg border border-border p-4 mb-4">
@@ -113,17 +100,17 @@ export const ProfileCard = () => {
         <div className="grid grid-cols-2 gap-x-2 gap-y-2">
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground">Members</span>
-            <span className="font-bold text-fresh-blue">{communityStats.members.toLocaleString()}</span>
+            <span className="font-bold text-fresh-blue">{profile ? 1 : 0}</span>
           </div>
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground">Active Today</span>
-            <span className="font-bold text-fresh-blue">{communityStats.activeMembersToday.toLocaleString()}</span>
+            <span className="font-bold text-fresh-blue">{profile ? 1 : 0}</span>
           </div>
         </div>
         <div className="mt-2 flex items-center justify-between">
           <span className="text-xs text-muted-foreground">Growth Rate (weekly)</span>
           <span className="text-xs font-semibold text-fresh-green flex items-center gap-1">
-            <TrendingUp className="h-3 w-3" /> {communityStats.growthRate}
+            <TrendingUp className="h-3 w-3" /> {profile ? "10%" : "0%"}
           </span>
         </div>
       </div>
