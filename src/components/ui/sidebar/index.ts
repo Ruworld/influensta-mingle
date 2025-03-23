@@ -9,7 +9,9 @@ export {
   SIDEBAR_WIDTH_MOBILE, 
   SIDEBAR_WIDTH_ICON,
   SIDEBAR_KEYBOARD_SHORTCUT,
-  useSidebar 
+  useSidebar,
+  // Explicitly re-export SidebarContext to resolve ambiguity
+  SidebarContext
 } from "./SidebarContext"
 export * from "./SidebarInput"
 export * from "./SidebarInset"
@@ -18,4 +20,5 @@ export * from "./SidebarProvider"
 export * from "./SidebarRail"
 export * from "./SidebarSections"
 export * from "./SidebarTrigger"
-export * from "./SidebarTypes"
+// Export types separately to avoid conflicts
+export type * from "./SidebarTypes"
