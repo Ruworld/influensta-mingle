@@ -9,6 +9,7 @@ export const SIDEBAR_WIDTH_MOBILE = "18rem"
 export const SIDEBAR_WIDTH_ICON = "3rem"
 export const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
+// Create the context with the proper type
 const SidebarContext = React.createContext<SidebarContextType | null>(null)
 
 export function useSidebar() {
@@ -20,4 +21,5 @@ export function useSidebar() {
   return context
 }
 
+// Export the context
 export { SidebarContext }
