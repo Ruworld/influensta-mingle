@@ -60,10 +60,26 @@
   }
   
   .container {
-    padding-left: 12px !important;
-    padding-right: 12px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     max-width: 100% !important;
     width: 100% !important;
+  }
+  
+  /* Instagram-like mobile styling */
+  .mobile-header {
+    height: 44px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
   
   /* Fix for the mobile bottom navigation */
@@ -74,6 +90,22 @@
   /* Make sure content doesn't get hidden behind mobile nav */
   main {
     padding-bottom: 80px !important;
+  }
+  
+  /* Story circles for mobile */
+  .story-circles-container {
+    padding: 8px 0;
+    margin-bottom: 4px;
+  }
+  
+  .story-circle {
+    width: 66px;
+    margin: 0 4px;
+  }
+  
+  .story-circle img {
+    width: 56px;
+    height: 56px;
   }
   
   /* Fix for iOS safe areas */

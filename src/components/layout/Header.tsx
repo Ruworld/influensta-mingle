@@ -15,9 +15,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export const Header = () => {
   const { user, profile, signOut } = useAuth();
+  const isMobile = useIsMobile();
   
   const handleSignOut = async () => {
     try {
@@ -27,6 +29,27 @@ export const Header = () => {
     }
   };
   
+  // Mobile Instagram-like header
+  if (isMobile) {
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 h-12 bg-background border-b border-border flex items-center px-4">
+        <div className="flex-1 flex items-center justify-between">
+          <div className="w-10"></div> {/* Empty space for alignment */}
+          <Link to="/" className="font-semibold text-xl tracking-tight text-foreground instagram-gradient bg-clip-text text-transparent">
+            influensta
+          </Link>
+          <div className="flex items-center">
+            <Link to="/notifications" className="relative text-muted-foreground hover:text-foreground">
+              <Bell className="h-6 w-6" />
+              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] flex items-center justify-center text-white">3</span>
+            </Link>
+          </div>
+        </div>
+      </header>
+    );
+  }
+  
+  // Desktop header
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 backdrop-blur-md bg-background/80 border-b border-border flex items-center px-4 md:px-6">
       <div className="flex-1 flex items-center justify-between max-w-7xl mx-auto">

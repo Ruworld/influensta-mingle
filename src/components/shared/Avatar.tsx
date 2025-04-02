@@ -43,18 +43,22 @@ export const Avatar = ({
     'https://images.dog.ceo/breeds/terrier-norwich/n02094258_1003.jpg'
   ];
   
+  // Select a deterministic dog image based on the alt text
+  const getDefaultDogImage = () => {
+    const index = alt.length % dogImages.length;
+    return dogImages[index];
+  };
+  
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
-    // Use a random dog image from the array
-    const randomDogImage = dogImages[Math.floor(Math.random() * dogImages.length)];
-    target.src = randomDogImage;
+    target.src = getDefaultDogImage();
   };
   
   return (
     <div className="relative">
       <RadixAvatar className={cn(sizeClasses[size], className)}>
         <AvatarImage 
-          src={src} 
+          src={src || getDefaultDogImage()} 
           alt={alt} 
           className="object-cover" 
           onError={handleImageError}
