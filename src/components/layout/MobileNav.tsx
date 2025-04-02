@@ -26,7 +26,7 @@ export const MobileNav = () => {
             key={item.path}
             to={item.path}
             className={cn(
-              "flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-md transition-all relative",
+              "flex flex-col items-center justify-center gap-1 px-2 py-1 rounded-md transition-all relative",
             )}
           >
             {item.hasNotification && (
@@ -34,7 +34,7 @@ export const MobileNav = () => {
             )}
             <item.icon
               className={cn(
-                "h-6 w-6",
+                "h-5 w-5",
                 location.pathname === item.path
                   ? "text-fresh-blue"
                   : "text-muted-foreground"
@@ -57,9 +57,9 @@ export const MobileNav = () => {
       {/* Floating post button */}
       <Link
         to="/create"
-        className="absolute -top-14 right-6 h-14 w-14 rounded-full bg-gradient-to-tr from-fresh-blue to-fresh-teal shadow-lg flex items-center justify-center touch-manipulation"
+        className="absolute -top-12 right-4 h-12 w-12 rounded-full bg-gradient-to-tr from-fresh-blue to-fresh-teal shadow-lg flex items-center justify-center touch-manipulation"
       >
-        <Plus className="h-7 w-7 text-white" />
+        <Plus className="h-6 w-6 text-white" />
       </Link>
     </div>
   );

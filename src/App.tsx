@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { Layout } from "@/components/layout/Layout";
 import Feed from "./pages/Feed";
 import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
@@ -22,6 +23,7 @@ import Boost from "./pages/Boost";
 import Promotions from "./pages/Promotions";
 import MyStore from "./pages/MyStore";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
@@ -33,43 +35,44 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Feed />} />
+            <Route path="/" element={<Layout><Feed /></Layout>} />
+            <Route path="/index" element={<Layout><Index /></Layout>} />
             <Route path="/profile" element={
               <ProtectedRoute>
-                <Profile />
+                <Layout><Profile /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/messages" element={
               <ProtectedRoute>
-                <Messages />
+                <Layout><Messages /></Layout>
               </ProtectedRoute>
             } />
-            <Route path="/explore" element={<Explore />} />
-            <Route path="/reels" element={<Reels />} />
-            <Route path="/shorts" element={<Shorts />} />
+            <Route path="/explore" element={<Layout><Explore /></Layout>} />
+            <Route path="/reels" element={<Layout><Reels /></Layout>} />
+            <Route path="/shorts" element={<Layout><Shorts /></Layout>} />
             <Route path="/settings" element={
               <ProtectedRoute>
-                <Settings />
+                <Layout><Settings /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/notifications" element={
               <ProtectedRoute>
-                <Notifications />
+                <Layout><Notifications /></Layout>
               </ProtectedRoute>
             } />
-            <Route path="/community" element={<Community />} />
-            <Route path="/merchandise" element={<Merchandise />} />
-            <Route path="/promotions" element={<Promotions />} />
+            <Route path="/community" element={<Layout><Community /></Layout>} />
+            <Route path="/merchandise" element={<Layout><Merchandise /></Layout>} />
+            <Route path="/promotions" element={<Layout><Promotions /></Layout>} />
             <Route path="/my-store" element={
               <ProtectedRoute>
-                <MyStore />
+                <Layout><MyStore /></Layout>
               </ProtectedRoute>
             } />
             <Route path="/boost" element={
               <ProtectedRoute>
-                <Boost />
+                <Layout><Boost /></Layout>
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />
