@@ -34,10 +34,20 @@ export const Avatar = ({
     busy: 'bg-red-500'
   };
   
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    target.src = '/public/lovable-uploads/6ab16f59-8543-4487-a552-aad94d0390a3.png';
+  };
+  
   return (
     <div className="relative">
       <RadixAvatar className={cn(sizeClasses[size], className)}>
-        <AvatarImage src={src} alt={alt} className="object-cover" />
+        <AvatarImage 
+          src={src} 
+          alt={alt} 
+          className="object-cover" 
+          onError={handleImageError}
+        />
         <AvatarFallback className="font-medium">
           {fallback || alt.substring(0, 2).toUpperCase()}
         </AvatarFallback>

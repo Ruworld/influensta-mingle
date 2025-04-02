@@ -9,7 +9,7 @@
 @media (min-width: 768px) {
   #root {
     max-width: 1280px;
-    padding: 2rem;
+    padding: 0;
   }
 }
 
@@ -53,10 +53,30 @@
 @media (max-width: 767px) {
   body {
     overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    width: 100%;
   }
   
   .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  /* Fix for the mobile bottom navigation */
+  body {
+    padding-bottom: 60px;
+  }
+  
+  /* Fix for iOS safe areas */
+  @supports (padding: max(0px)) {
+    body {
+      padding-top: max(0px, env(safe-area-inset-top));
+      padding-bottom: max(60px, env(safe-area-inset-bottom));
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+    }
   }
 }

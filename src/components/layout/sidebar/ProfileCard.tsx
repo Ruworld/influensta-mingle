@@ -19,6 +19,9 @@ export const ProfileCard = () => {
     postImpressions: 0
   });
   
+  // Fallback image for profiles
+  const dogImageUrl = '/public/lovable-uploads/6ab16f59-8543-4487-a552-aad94d0390a3.png';
+  
   // Fetch real profile stats when profile loads
   useEffect(() => {
     if (profile) {
@@ -65,7 +68,15 @@ export const ProfileCard = () => {
       <Link to="/profile" className="flex flex-col items-center mb-3">
         <div className="w-full h-16 mb-12 bg-gradient-to-r from-fresh-blue to-fresh-teal rounded-t-lg relative -mt-4 -mx-4">
           <Avatar className="h-16 w-16 absolute left-1/2 transform -translate-x-1/2 top-8 border-4 border-background">
-            <img src={profile?.avatar_url || 'https://source.unsplash.com/random/200x200/?portrait=2'} alt={profile?.full_name || "User"} className="h-full w-full object-cover" />
+            <img 
+              src={profile?.avatar_url || dogImageUrl} 
+              alt={profile?.full_name || "User"} 
+              className="h-full w-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = dogImageUrl;
+              }}
+            />
           </Avatar>
         </div>
         <h3 className="font-semibold text-sm mt-2">{profile?.full_name || "Guest User"}</h3>
