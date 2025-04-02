@@ -34,9 +34,20 @@ export const Avatar = ({
     busy: 'bg-red-500'
   };
   
+  // Default dog image URLs for fallbacks
+  const dogImages = [
+    'https://images.dog.ceo/breeds/retriever-golden/n02099601_1722.jpg',
+    'https://images.dog.ceo/breeds/retriever-golden/n02099601_3861.jpg',
+    'https://images.dog.ceo/breeds/retriever-flatcoated/n02099267_1423.jpg',
+    'https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_1392.jpg',
+    'https://images.dog.ceo/breeds/terrier-norwich/n02094258_1003.jpg'
+  ];
+  
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
-    target.src = '/public/lovable-uploads/6ab16f59-8543-4487-a552-aad94d0390a3.png';
+    // Use a random dog image from the array
+    const randomDogImage = dogImages[Math.floor(Math.random() * dogImages.length)];
+    target.src = randomDogImage;
   };
   
   return (

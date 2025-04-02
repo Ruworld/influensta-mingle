@@ -25,25 +25,32 @@ import MyStore from "./pages/MyStore";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import { useEffect } from "react";
-import { App as CapacitorApp } from '@capacitor/app';
 
+// Create a new query client
 const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
     // Capacitor app functionality
-    try {
-      // Initialize Capacitor app listeners for mobile
-      CapacitorApp.addListener('backButton', ({ canGoBack }) => {
-        if (canGoBack) {
-          window.history.back();
-        } else {
-          CapacitorApp.exitApp();
-        }
-      });
-    } catch (error) {
-      console.warn('Capacitor not available:', error);
-    }
+    const initCapacitor = async () => {
+      try {
+        // Dynamically import Capacitor to prevent build errors
+        const { App: CapacitorApp } = await import('@capacitor/app');
+        
+        // Initialize Capacitor app listeners for mobile
+        CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+          if (canGoBack) {
+            window.history.back();
+          } else {
+            CapacitorApp.exitApp();
+          }
+        });
+      } catch (error) {
+        console.warn('Capacitor not available:', error);
+      }
+    };
+    
+    initCapacitor();
   }, []);
 
   return (

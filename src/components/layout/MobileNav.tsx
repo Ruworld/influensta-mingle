@@ -19,14 +19,14 @@ export const MobileNav = () => {
   ];
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-lg border-t border-border z-50">
-      <div className="flex items-center justify-around h-16 px-0">
+    <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-lg border-t border-border z-50 pb-safe">
+      <div className="flex items-center justify-around h-16 px-1">
         {menuItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
             className={cn(
-              "flex flex-col items-center justify-center gap-1 px-2 py-1 rounded-md transition-all relative",
+              "flex flex-col items-center justify-center gap-1 px-2 py-1 rounded-md transition-all relative w-full",
               location.pathname === item.path && "text-fresh-blue"
             )}
           >
@@ -56,6 +56,7 @@ export const MobileNav = () => {
       <Link
         to="/create"
         className="absolute -top-12 right-4 h-12 w-12 rounded-full bg-fresh-blue shadow-lg flex items-center justify-center touch-manipulation"
+        aria-label="Create new post"
       >
         <Plus className="h-6 w-6 text-white" />
       </Link>

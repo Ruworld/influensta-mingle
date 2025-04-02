@@ -24,10 +24,10 @@ export const Layout = ({ children }: LayoutProps) => {
         
         <main className={`flex-1 min-h-screen transition-all duration-300 ease-in-out ${
           isMobile 
-            ? 'pt-16 pb-20 px-0' 
+            ? 'pt-16 pb-20 px-3' // Added horizontal padding for mobile
             : 'pt-16 pb-6 md:pl-[240px] md:pr-[280px]'
         }`}>
-          <div className={`container ${isMobile ? 'px-0' : 'px-4 md:px-8'} max-w-full md:max-w-3xl mx-auto animate-fade-in`}>
+          <div className={`container ${isMobile ? 'px-0 w-full' : 'px-4 md:px-8'} max-w-full md:max-w-3xl mx-auto animate-fade-in`}>
             {children}
           </div>
         </main>
